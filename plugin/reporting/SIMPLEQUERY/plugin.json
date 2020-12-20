@@ -1,0 +1,8 @@
+{
+	"pluginName":"Simple Query",
+	"version":"1.0",
+	"className":"com.app.plugin.core.model.Reporting",
+	"object":{
+	           "query":"hhello world"
+	          }
+}
