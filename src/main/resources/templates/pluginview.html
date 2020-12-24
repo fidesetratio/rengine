@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Fragments Main</title>
+    
+    
+</head>
+<body>
+<div th:fragment="content">
+	<div class="row">
+	
+	
+		 <div class="col-lg-12 mt-5 mb-5">
+		<h2 th:text="${plugin.pluginName}"></h2>	
+		
+		<input type="hidden" name="querytosend" id="queryTmp" th:value="${query}"/>
+		
+<button type="button" id="flip" class="btn btn-primary">Query</button>
+<br/>
+<br/>
+<div id="panel" class="card"> <div class="card-body" id="querytosend" th:text="${query}">
+				    
+				  </div></div>
+		
+		
+		
+		<br/>
+		<br/>
+		 <form>
+		 <div class="form-row">
+		 
+		<div class="form-group col-md-4"  th:each="form : ${forms}">
+			<label th:for="${form.name}" th:text="${form.label}">Nama Ayah</label>
+			<input type="text" th:name="${form.name}"  class="form-control input-type-form" th:id=${form.name} th:placeholder="${form.value}" th:value="${form.value}">
+		</div>
+		
+		<input type="hidden" name="query" th:value="${reporting.query}"/>
+	</div>
+	
+	<a class="btn btn-primary" href="/" role="button">Back</a> <button type="submit" id="quicksearch" class="btn btn-primary">Quick Search</button> <button type="submit" class="btn btn-primary">Generate Reporting</button> 
+	</form>
+		 </div>
+		 
+	</div>
+	
+	<style> 
+
+
+#panel {
+  display: none;
+}
+</style>
+
+<script>
+    $(document).ready(function() {
+    		
+    		var queryToTemp = $("#queryTmp").val();
+			var replaceInArray = {};
+			var initFirstLoad = true;
+    		$("#flip").click(function(){
+   					  $("#panel").slideToggle("slow");
+  			   });
+   			 
+   			  $(".input-type-form").each(function(e,ev){
+   					if(initFirstLoad){
+   						var text = queryToTemp;
+   						var name = $(this).attr("name");
+   						var value = $(this).val();
+   						replaceInArray[name] = value;
+   						$.each( replaceInArray, function( name, value ){
+   								text=text.replace("${"+name+"\}",value);
+   						});
+   						$("#querytosend").text(text);
+   						
+	   				}
+   					$(this).on("input",function(){
+   					 	var text = queryToTemp;
+   						var name = $(this).attr("name");
+   						var value = $(this).val();
+   						replaceInArray[name] = value;
+   						$.each( replaceInArray, function( name, value ){
+   								text=text.replace("${"+name+"\}",value);
+   						});
+   						$("#querytosend").text(text);
+   					})
+   			  });
+   			
+   			  initFirstLoad = false;
+  //------------------
+  		$("#quicksearch").click(function(e){
+  			e.preventDefault();
+  		   $("#total").text("Total Result : 0");
+  		   $("#result").html("");
+  			var text = $("#querytosend").text();
+  			var qmodel = {
+  					"query":text
+  					
+  			};
+  		
+  			
+  			$.ajax({
+  		       type : "POST",
+  		       contentType : "application/json",
+  		       url : "/plugin/query",
+  		       data : JSON.stringify(qmodel),
+  		       dataType : 'json',
+  		       cache : false,
+  		       timeout : 600000,
+  		       success : function(data) {
+  		    	    var response = {};
+  		    	    response.columns = data.headers;
+  		    	    response.data = data.lists;
+  		    	    response.total = data.total;
+  		    	    $("#total").text("Total Result : "+response.total);
+  		    	    formDataTable(response);
+  		    	  
+  		       		
+  		       
+  		       },
+  		       error : function(e) {
+  		       }
+  		       
+  		     });
+  			
+  		       
+  		       
+  			
+  			
+  		})
+  
+  	
+    });
+    
+    //--- form data table 
+    function formDataTable(response)
+    {
+        var allcolumns = response.columns;
+     	if(allcolumns != null){
+     		 var $table = $('<table class="table table-bordered">');
+             var $thead = $('<thead>').appendTo($table);
+             $(allcolumns).each(function(i){
+                 var $th = $('<th>',{'html':allcolumns[i]}).appendTo($thead);
+             });
+             
+             var allData = response.data;
+             var $tbody = $('<tbody>').appendTo($table);
+             $(allData).each(function(j,v){
+               $tr = $('<tr>').appendTo($tbody);
+           	  var ob = JSON.stringify(v);
+           	  ob = JSON.parse(ob);
+               $.each(ob,function(name,value){
+             	  var $td = $('<td>',{'html':value}).appendTo($tr);
+               });
+            
+             });
+             $("#result").html($table);
+         		
+     	}else{
+     		alert("there something problem on your service, please contact administrator?.");
+     	}
+     }
+      
+      
+  
+    
+    
+  </script>
+  	<div id="total">Total Result : 0</div>
+  	<div id="result">
+		
+  	
+  	</div>
+	
+	
+</div>
+
+</body>
+</html>

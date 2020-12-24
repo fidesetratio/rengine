@@ -1,8 +1,13 @@
 {
-	"pluginName":"Simple Query",
+	"pluginName":"Pencarian berdasarkan reg_spaj",
+	"description":"Pencarian Yang diperuntukan untuk mencari data",
 	"version":"1.0",
 	"className":"com.app.plugin.core.model.Reporting",
 	"object":{
-	           "query":"hhello world"
+	           "query":"query.txt",
+	       		"forms":[
+	       			{"name":"reg_spaj","label":"REG SPAJ","value":"0","type":"text"}
+	       		
+	       			]
 	          }
 }

@@ -1,0 +1,1 @@
+select * from eka.mst_policy where rownum between ${start} and ${end}

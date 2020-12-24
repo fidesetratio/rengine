@@ -9,32 +9,35 @@
 <body>
 
  <div th:fragment="content">
+ <br/>
+<div class="row">
+ <button type="button" class="btn btn-primary">Refresh Reporting</button>
+</div>
+
  <div class="row">
+ 
+ 
    <div class="col-lg-10 mt-5 mb-5">
+   <h3>Reporting</h3>
   <table class="table table-bordered" style="width: 100%">
     <thead>
       <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
+        <th>No</th>
+        <th>Reporting Name</th>
+        <th>Version</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
+      <tr th:each="plugin,rowStat: ${plugins}">
+       <td th:text="${rowStat.__index__+1}">1</td>
+        <td th:text="${plugin.pluginName}">1</td>
+    	<td th:text="${plugin.version}">Jack</td>
+    	   <td>
+        <a th:href="@{'/pluginview?plugin=' + ${plugin.folderName}}">View</a>
+     </td>
+     
+    </tr>
     </tbody>
   </table>
   </div>

@@ -8,6 +8,31 @@ public class Plugin {
 		private String pluginName;
 		private String version;
 		private String className;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		private String description;
+		
+		public String getFullPath() {
+			return fullPath;
+		}
+		public void setFullPath(String fullPath) {
+			this.fullPath = fullPath;
+		}
+
+		private String fullPath;
+		public String getFolderName() {
+			return folderName;
+		}
+		public void setFolderName(String folderName) {
+			this.folderName = folderName;
+		}
+
+		private String folderName;
 		private Object object;
 		public String getPluginName() {
 			return pluginName;

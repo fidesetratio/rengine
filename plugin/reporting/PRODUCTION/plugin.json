@@ -1,0 +1,13 @@
+{
+	"pluginName":"Production Query",
+	"version":"1.0",
+	"className":"com.app.plugin.core.model.Reporting",
+	"object":{
+	           "query":"query.txt",
+	           "forms":[
+	       			{"name":"start","label":"Start","value":"1","type":"text"},
+	       		    {"name":"end","label":"End","value":"1","type":"text"}
+	       				
+	       			]
+	          }
+}
