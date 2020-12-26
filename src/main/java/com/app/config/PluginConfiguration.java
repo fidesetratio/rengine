@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.app.plugin.core.DefaultPluginEngine;
 import com.app.plugin.core.PluginEngine;
 import com.app.plugin.core.PluginParameter;
+import com.app.plugin.core.TaskPluginMonitoring;
 
 @Configuration
 public class PluginConfiguration {
@@ -18,5 +19,10 @@ public class PluginConfiguration {
 		defaultPluginEngine.build(pluginParameter);
 		defaultPluginEngine.reload();
 		return defaultPluginEngine;
+	}
+	
+	@Bean
+	public TaskPluginMonitoring taskPluginMonitoring() {
+		return new TaskPluginMonitoring();
 	}
 }
