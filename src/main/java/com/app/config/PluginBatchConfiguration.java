@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.app.plugin.core.ExcellWriter;
 import com.app.plugin.core.LoggingItemWriter;
 import com.app.plugin.core.TaskTable;
 
@@ -89,5 +90,12 @@ public class PluginBatchConfiguration  {
 			@StepScope
 		    public ItemWriter<TaskTable> jdbcPaginationItemWriter() {
 		        return new LoggingItemWriter();
+		    }
+			
+			
+			@Bean(name="excelPagingWriter")
+			@StepScope
+			public ItemWriter<TaskTable> excellWriter() {
+		        return new ExcellWriter();
 		    }
 }
