@@ -64,14 +64,12 @@ public class PluginRest {
 
 	@GetMapping("/executeTask")
     public String executeTask() {
-		
 		    JobParametersBuilder paramsBuilder = new JobParametersBuilder();
 	        paramsBuilder.addString("selectQuery", "select rownum as number1,a.reg_spaj");
 	        paramsBuilder.addString("fromQuery", "FROM eka.mst_policy a");
 	        paramsBuilder.addString("whereQuery", "where 1=1");	        
 	        taskPluginServices.executeTask(paramsBuilder);
-	        
-	        return "executeTask";
+		    return "executeTask";
 		
 	}
 	
@@ -83,6 +81,7 @@ public class PluginRest {
 			 */
 		  ItemReader reader = (ItemReader)context.getBean("pagingItemReaderBean");
 		  ItemWriter writer = (ItemWriter)context.getBean("pagingItemWriterBean");
+		  
 		  Step step = stepBuilderFactory.get("orderStep1").<TaskTable, TaskTable> chunk(100).reader(reader).writer(writer).build();
 		  Flow oneFlowOnly = new FlowBuilder<Flow>("singleFlow").
 					start(step).

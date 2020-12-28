@@ -35,4 +35,16 @@ public class QueryServices {
 		
 		return tables;
 	}
+	
+	public List<String> getHeaders(String query){
+		List<Map<String,Object>> s = jdbcTemplate.queryForList(query);
+		Map<String,Object> m = s.get(0);
+		List<String> headers = m.keySet().stream().collect(Collectors.toList());
+		return headers;
+	}
+	
+	public Integer getTotal(String query) {
+		return this.jdbcTemplate.queryForObject(
+				 query, Integer.class);
+	}
 }

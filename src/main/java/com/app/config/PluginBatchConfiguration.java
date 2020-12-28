@@ -93,8 +93,7 @@ public class PluginBatchConfiguration  {
 		    }
 			
 			
-			@Bean(name="excelPagingWriter")
-			@StepScope
+			@Bean(name="excelPagingWriterBean")
 			public ItemWriter<TaskTable> excellWriter() {
 		        return new ExcellWriter();
 		    }

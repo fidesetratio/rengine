@@ -12,6 +12,9 @@ public class LoggingItemWriter implements ItemWriter<TaskTable> {
 	@Override
 	public void write(List<? extends TaskTable> items) throws Exception {
 		// TODO Auto-generated method stub
+		for(TaskTable i:items) {
+			System.out.println(i.getReg_spaj());
+		}
 		logger.info("size="+items.size());
 	}
 
