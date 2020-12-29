@@ -17,18 +17,24 @@ import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.app.plugin.core.ExcellWriter;
+import com.app.plugin.core.JdbcPagingItemTaskReader;
 import com.app.plugin.core.LoggingItemWriter;
 import com.app.plugin.core.TaskTable;
 
 @Configuration
 public class PluginBatchConfiguration  {
 	 private static final Logger logger = LoggerFactory.getLogger(PluginBatchConfiguration.class);
+	 
+	 
+	 @Autowired
+	 private DataSource dataSource;
 		
 		
 	 @Bean
@@ -67,7 +73,23 @@ public class PluginBatchConfiguration  {
 	                .build();
 	    }
 		
-	
+	/*	
+		@Bean(name="pagingItemReaderBean2")
+	    public ItemReader<TaskTable> jdbcPaginationItemReader2() {
+
+			return new JdbcPagingItemTaskReader(dataSource,100,new RowMapper<TaskTable>() {
+
+				@Override
+				public TaskTable mapRow(ResultSet rs, int rowNum) throws SQLException {
+					TaskTable table = new TaskTable();
+					table.setReg_spaj(rs.getString("reg_spaj"));
+					return table;
+				}
+			});
+		
+		}
+		
+	*/
 		
 	    public SqlPagingQueryProviderFactoryBean queryProvider(DataSource dataSource,String selectQuery, String fromQuery,String whereQuery) {
 	        SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();

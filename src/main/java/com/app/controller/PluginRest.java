@@ -68,6 +68,8 @@ public class PluginRest {
 	        paramsBuilder.addString("selectQuery", "select rownum as number1,a.reg_spaj");
 	        paramsBuilder.addString("fromQuery", "FROM eka.mst_policy a");
 	        paramsBuilder.addString("whereQuery", "where 1=1");	        
+	        paramsBuilder.addLong("time",System.currentTimeMillis());
+			
 	        taskPluginServices.executeTask(paramsBuilder);
 		    return "executeTask";
 		

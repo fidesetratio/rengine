@@ -2,9 +2,6 @@ package com.app.services;
 
 import java.util.List;
 
-import javax.batch.api.listener.StepListener;
-import javax.servlet.WriteListener;
-
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -28,7 +25,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.app.plugin.core.ExcellWriter;
 import com.app.plugin.core.TaskTable;
 
 @Service
@@ -53,7 +49,7 @@ public class TaskPluginServices {
 	
 	@Async("processExecutor")
 	public void executeTask( JobParametersBuilder paramsBuilder) {
-		
+			
 		
 		  String selectQuery =  paramsBuilder.toJobParameters().getString("selectQuery");
 		  String fromQuery =  paramsBuilder.toJobParameters().getString("fromQuery");
@@ -84,7 +80,7 @@ public class TaskPluginServices {
 	                .start(oneFlowOnly)
 	                .end()
 	                .build();
-		  
+	
 		  try {
 				JobExecution execution = jobLauncher.run(job,paramsBuilder.toJobParameters());
 			} catch (JobExecutionAlreadyRunningException e) {
