@@ -4,7 +4,10 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -35,18 +38,26 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	    private int row;
 	    private String headers;
 	    private String total;
+	    private List<String> headersExcel;
+	
+	    private String keyId;
 	    @Override
 	    public void beforeStep(StepExecution stepExecution) {
 	    		wb = new HSSFWorkbook();
 		        HSSFPalette palette = wb.getCustomPalette();
 		        HSSFSheet s = wb.createSheet();
-		        resource = new FileSystemResource("output.xlsx");
 		        row = 0;
 		        headers = stepExecution.getJobExecution().getJobParameters().getString("headers");
+		        headersExcel =  Stream.of(headers.split(";"))
+		        	     .map(String::trim)
+		        	     .collect(Collectors.toList());
 		        total = stepExecution.getJobExecution().getJobParameters().getString("total");
+		        keyId = stepExecution.getJobExecution().getJobParameters().getString("keyId");
+		        resource = new FileSystemResource(keyId+".xls");
+		        System.out.println(resource.getDescription());
 		        createTitleRow(s, palette);
 		        createHeaderRow(s,headers);
-		        System.out.println("selectQuery2:"+headers);
+		        System.out.println("selectQuery22:"+headers);
 		        System.out.println("total:"+total);
 	    	
 	    }
@@ -76,19 +87,21 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 		
 		System.out.println(items.size()+"sizekuu");
 	    if(wb == null) {
-	    		wb = new HSSFWorkbook();
+	    	/*	wb = new HSSFWorkbook();
 	    		HSSFPalette palette = wb.getCustomPalette();
 		        HSSFSheet s = wb.createSheet();
 
 		        resource = new FileSystemResource("output.xlsx");
 		        row = 0;
 		        createTitleRow(s, palette);
-		        createHeaderRow(s,headers);
+		        createHeaderRow(s,headers);*/
 	    }
 		HSSFSheet s = wb.getSheetAt(0);
 	     
 		 for (TaskTable i : items) {
-	            Row r = s.createRow(row++);
+			 Row r = s.createRow(row++);
+			 	
+	         /*   Row r = s.createRow(row++);
 	            Cell c = r.createCell(0);
 	            c.setCellValue(i.getReg_spaj());
 
@@ -96,7 +109,29 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	            c.setCellValue(i.getReg_spaj());
 
 	            c = r.createCell(2);
-	            c.setCellValue(i.getReg_spaj());
+	            c.setCellValue(i.getReg_spaj()); */
+			 	int j = 0;
+			 	for(int it=1;it<headersExcel.size();it++) {
+			 		Cell c = r.createCell(j);
+			 		Object o = i.get(headersExcel.get(it));
+			 		if(o != null) {
+			 		if(o instanceof String) {
+			 			c.setCellValue((String)o);
+			 		}else if(o instanceof Integer) {
+				 		c.setCellValue((Integer)o);
+			 		}else if(o instanceof Date) {
+				 		c.setCellValue((Date)o);
+			 		}else if(o instanceof Double)
+			 		{
+			 			c.setCellValue((Double)o);
+			 		}else {
+			 			c.setCellValue(o.toString());
+			 		}
+			 		
+			 		j++;
+			 		};
+			 	}
+			 
 
 	            
 	        }
@@ -138,13 +173,15 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	        HSSFRow r = s.createRow(row);
 	        r.setRowStyle(cs);
 	        int i = 0;
-	        Cell c = r.createCell(0);
-	        
-	        for(String h:list) {
+	        Cell c = null;
+	       for(int j = 1;j<list.size();j++) {
+	    	    c= r.createCell(i);
+	    	    String h = list.get(j);
 	        	c.setCellValue(h.toUpperCase());
 	        	s.setColumnWidth(i, poiWidth(18.0));
 	        	i++;
-	        }
+	       }
+	        
 	        
 			/*
 			 * 

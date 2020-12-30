@@ -14,52 +14,23 @@ import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.jdbc.core.RowMapper;
 
-public class JdbcPagingItemTaskReader extends JdbcPagingItemReader<TaskTable> implements StepExecutionListener {
+public class JdbcPagingItemTaskReader extends JdbcPagingItemReader<TaskTable> {
 	
-	private DataSource ds;
-	private int pageSize;
-	private RowMapper<TaskTable> mapper;
-	public JdbcPagingItemTaskReader(DataSource ds,int pageSize,RowMapper<TaskTable> mapper) {
+	public JdbcPagingItemTaskReader(DataSource ds,int pageSize,RowMapper<TaskTable> mapper,PagingQueryProvider queryProvider) {
 		super();
-		this.ds = ds;
-		this.mapper = mapper;
-		this.pageSize = pageSize;
 		setDataSource(ds);
-		System.out.println(getExecutionContextKey("selectQuery"));
-
 		setPageSize(pageSize);
-		setQueryProvider(null);
+		setQueryProvider(queryProvider);
 		setRowMapper(mapper);
-	}
-
-	@Override
-	public void beforeStep(StepExecution stepExecution) {
-		System.out.println("Step Execution...");
-		
-		PagingQueryProvider queryProvider=null;
-		String selectQuery = stepExecution.getJobExecution().getJobParameters().getString("selectQuery");
-		String fromQuery = stepExecution.getJobExecution().getJobParameters().getString("fromQuery");
-		String whereQuery = stepExecution.getJobExecution().getJobParameters().getString("whereQuery");
 		try {
-			queryProvider = queryProvider(ds,selectQuery,fromQuery,whereQuery).getObject();
+			this.afterPropertiesSet();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setDataSource(ds);
-		setPageSize(pageSize);
-		setRowMapper(mapper);
-		setQueryProvider(queryProvider);
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override
-	public ExitStatus afterStep(StepExecution stepExecution) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 	 private SqlPagingQueryProviderFactoryBean queryProvider(DataSource dataSource,String selectQuery, String fromQuery,String whereQuery) {
 	        SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();

@@ -1,14 +1,44 @@
 package com.app.plugin.core.model;
 
 public class TaskMonitoring {
-  public String getKeyId() {
-		return keyId;
+
+	private String keyId;
+    public int getTotalCount() {
+		return totalCount;
 	}
 
-	public void setKeyId(String keyId) {
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	private int totalCount;
+	public Double getProgress() {
+		return progress;
+	}
+
+
+	public void setProgress(Double progress) {
+		this.progress = progress;
+	}
+
+	private Double progress;
+	 public TaskMonitoring() {
+		 
+	 }
+	
+		
+	  public TaskMonitoring(String keyId) {
+		super();
 		this.keyId = keyId;
 	}
 
-private String keyId;
+	public String getKeyId() {
+			return keyId;
+		}
+
+		public void setKeyId(String keyId) {
+			this.keyId = keyId;
+		};
   
 }

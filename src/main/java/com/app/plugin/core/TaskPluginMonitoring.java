@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.app.plugin.core.model.TaskMonitoring;
 
 public class TaskPluginMonitoring {
@@ -29,6 +31,13 @@ public class TaskPluginMonitoring {
 	
 	public List<TaskMonitoring> list(){
 		return tableMonitoring.values().stream().collect(Collectors.toList());
+	}
+	
+	
+	
+	public static String keyIdGenerator() {
+		 String generatedString = RandomStringUtils.randomAlphanumeric(10);
+		 return generatedString;
 	}
 
 }
