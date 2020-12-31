@@ -107,7 +107,7 @@ public class TaskPluginServices {
 				  
 		  
 		  
-		  ItemWriter writer =    new ExcellWriter();
+		  ItemWriter writer =    new ExcellWriter(taskPluginMonitoring);
 		  
 		  JobExecutionListener jobExecutionListener = new CoreJobExecutionListener(taskPluginMonitoring, keyId);
 		  

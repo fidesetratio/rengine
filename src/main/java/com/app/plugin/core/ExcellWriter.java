@@ -39,8 +39,18 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	    private String headers;
 	    private String total;
 	    private List<String> headersExcel;
-	
 	    private String keyId;
+	    private TaskPluginMonitoring monitoring;
+	    
+	    public ExcellWriter(TaskPluginMonitoring monitoring) {
+	    	super();
+	    	this.monitoring= monitoring;
+	    }
+	    public ExcellWriter() {
+	    	super();
+	    }
+	    
+	    
 	    @Override
 	    public void beforeStep(StepExecution stepExecution) {
 	    		wb = new HSSFWorkbook();
@@ -54,6 +64,7 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 		        total = stepExecution.getJobExecution().getJobParameters().getString("total");
 		        keyId = stepExecution.getJobExecution().getJobParameters().getString("keyId");
 		        resource = new FileSystemResource(keyId+".xls");
+		        
 		        System.out.println(resource.getDescription());
 		        createTitleRow(s, palette);
 		        createHeaderRow(s,headers);
@@ -69,47 +80,34 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 		            return ExitStatus.FAILED;
 		        }
 		        createFooterRow();
+		        
 		        try (BufferedOutputStream bos = new BufferedOutputStream(resource.getOutputStream())) {
 		            wb.write(bos);
 		            bos.flush();
 		            wb.close();
+		            
+		            monitoring.get(keyId).setDownloadFile(resource.getFilename());
+		        
+		        
 		        } catch (IOException ex) {
 		            throw new ItemStreamException("Error writing to output file", ex);
 		        }
+		        
 		        row = 0;
+		        
+		        
 		        
 	        return ExitStatus.COMPLETED;
 		}
 	    
 
 	public void write(List<? extends TaskTable> items) throws Exception {
-		// TODO Auto-generated method stub
-		
-		System.out.println(items.size()+"sizekuu");
-	    if(wb == null) {
-	    	/*	wb = new HSSFWorkbook();
-	    		HSSFPalette palette = wb.getCustomPalette();
-		        HSSFSheet s = wb.createSheet();
-
-		        resource = new FileSystemResource("output.xlsx");
-		        row = 0;
-		        createTitleRow(s, palette);
-		        createHeaderRow(s,headers);*/
-	    }
+	
 		HSSFSheet s = wb.getSheetAt(0);
 	     
 		 for (TaskTable i : items) {
 			 Row r = s.createRow(row++);
-			 	
-	         /*   Row r = s.createRow(row++);
-	            Cell c = r.createCell(0);
-	            c.setCellValue(i.getReg_spaj());
-
-	            c = r.createCell(1);
-	            c.setCellValue(i.getReg_spaj());
-
-	            c = r.createCell(2);
-	            c.setCellValue(i.getReg_spaj()); */
+			
 			 	int j = 0;
 			 	for(int it=1;it<headersExcel.size();it++) {
 			 		Cell c = r.createCell(j);
@@ -181,17 +179,6 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	        	s.setColumnWidth(i, poiWidth(18.0));
 	        	i++;
 	       }
-	        
-	        
-			/*
-			 * 
-			 * 
-			 * c.setCellValue("Author"); s.setColumnWidth(0, poiWidth(18.0)); c =
-			 * r.createCell(1); c.setCellValue("Book Name"); s.setColumnWidth(1,
-			 * poiWidth(24.0)); c = r.createCell(2); c.setCellValue("ISBN");
-			 * s.setColumnWidth(2, poiWidth(18.0)); c = r.createCell(3);
-			 * c.setCellValue("Price"); s.setColumnWidth(3, poiWidth(18.0));
-			 */
 	        row++;
 	    }
 	 private int poiWidth(double width) {
@@ -199,11 +186,7 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 	    }	
 	 
 	 private void createFooterRow() {
-	        //HSSFSheet s = wb.getSheetAt(0);
-	        //HSSFRow r = s.createRow(row);
-	        //Cell c = r.createCell(3);
-	        //c.setCellType(CellType.FORMULA);
-	       // c.setCellFormula(String.format("SUM(D3:D%d)", row));
+	       
 	        row++;
 
 	    }

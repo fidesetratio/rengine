@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Fragments Main</title>
+    
+    
+</head>
+<body>
+<div th:fragment="content">
+<style>
+
+
+    .statusBorder
+    {
+        position:relative;
+        height:5px;
+        width:100px;
+        border:solid 1px gray;
+        display:block;
+    }
+    .statusFill
+    {
+        position:absolute;
+        top:0;
+        left:0;
+        width:0px;
+        background-color:Blue;
+        height:5px;
+    }
+
+
+</style>
+	<div class="row">
+	
+		 <div class="col-lg-12 mt-5 mb-5">
+		<h2>Status Task</h2>
+			
+			<table class="table table-bordered">
+				<thead>
+			<tr>
+		      <th>Key Id</th>
+		      <th>Total Count</th>
+		       <th>Process</th>
+		       <th></th>
+		       <th>FileName</th>
+		       <th>Create Date</th>
+		       <th>Action</th>
+    </tr>
+				</thead>
+				<tbody>
+					 <tr th:each="t : ${lists}">
+      <td th:text="${t.keyId}"></td>
+      <td th:text="${t.totalCount}"></td>
+         <td th:text="${#numbers.formatDecimal(t.progress == null ? 0 : t.progress, 0, 0)+'%'}"></td>
+       <td >  <div class="statusBorder">
+        <div class="statusFill" th:style="'width: '+@{${#numbers.formatDecimal(t.progress == null ? 0 : t.progress, 0, 0)+'px'}}">
+        
+       
+        </div>
+    </div></td>
+      <td>
+    <div th:if="${t.downloadFile == ''}">
+  		
+	</div>
+    <div th:if="${t.downloadFile != ''}" >
+  <img src="https://img.icons8.com/color/2x/ms-excel.png" width="40"  height="50"/>
+</div>
+
+      </td>
+        <td th:text="${t.dateTime}"></td>
+    
+      <td>
+       <div th:if="${t.progress >= 100}" >
+  	<a href="">Remove</a>
+</div>
+      <div th:if="${t.progress < 100}" >
+  Remove
+</div>
+
+      </td>
+    </tr>
+				</tbody>
+			</table>
+			
+			
+		 </div>
+		<script>
+		 $(document).ready(function() {
+			 $('#statusBorder').show();
+			 $('#statusFill').width(100);
+		 });
+		</script>
+	
+</div>
+</div>
+</body>
+</html>
