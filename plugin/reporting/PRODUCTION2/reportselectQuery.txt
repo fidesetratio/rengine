@@ -1,0 +1,7 @@
+select rownum as number1,nb.* ,(case when nb.jenis = 1 then 'UNIT LINK'
+                   when nb.jenis = 2 then 'SAVE SERIES' else 'NON-UNIT LINK' end)kriteria,       
+(case when (nb.clean_unclean = 1 or nb.clean_unclean is null)then 'CLEAN' else 'UNCLEAN' end) clean, (case when nb.jenis=2 then (case when nb.tgl_aksep_speedy is null then EKA.WORKDAYS (to_date(nb.tgl_upload_scan,'dd/MM/yyyy'),to_date(nb.tgl_aksep_uwproses,'dd/MM/yyyy')) else EKA.WORKDAYS (to_date(nb.tgl_upload_scan,'dd/MM/yyyy'),to_date(nb.tgl_aksep_speedy,'dd/MM/yyyy')) end)
+      when nb.lsbs_id = 73 and nb.lsdbs_number in(12,13,14) then EKA.WORKDAYS (to_date(nb.tgl_input,'dd/MM/yyyy'),to_date(nb.tgl_input_payment_pertama,'dd/MM/yyyy'))                       
+      when nb.lsbs_id = 205 then EKA.WORKDAYS (to_date(nb.tgl_input,'dd/MM/yyyy'),to_date(nb.tgl_input_payment_pertama,'dd/MM/yyyy'))  
+      else EKA.WORKDAYS (to_date(nb.tgl_input,'dd/MM/yyyy'),to_date(nb.tgl_kirim_polis,'dd/MM/yyyy'))
+end)sla

@@ -50,10 +50,15 @@ public class MainController {
 				if(reporting.isFromLoadText()) {
 					query = reporting.loadQueryFromTxt();
 				};
+				reporting.loadReportQueryFromTxt();
+				String reportQuery = reporting.getReportselectQuery()+" from "+ reporting.getReportfromQuery() + " "+ reporting.getReportwhereQuery();
 				model.addAttribute("query", query);
+				model.addAttribute("reportQuery",reportQuery);
 				model.addAttribute("plugin", p);
 		   		model.addAttribute("reporting",reporting);
 		    	model.addAttribute("forms",((Reporting) p.getObject()).getForms());
+		    	model.addAttribute("reportforms",((Reporting) p.getObject()).getReportingform());
+
 			}
 			
 		    return "pluginview";

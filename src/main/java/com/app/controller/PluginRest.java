@@ -1,4 +1,14 @@
 package com.app.controller;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -17,7 +27,9 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +40,8 @@ import com.app.model.QueryModel;
 import com.app.model.Table;
 import com.app.plugin.core.TaskPluginMonitoring;
 import com.app.plugin.core.TaskTable;
+import com.app.plugin.core.model.ReportingQuery;
+import com.app.plugin.core.model.ReportingQueryResponse;
 import com.app.plugin.core.model.TaskMonitoring;
 import com.app.services.QueryServices;
 import com.app.services.TaskPluginServices;
@@ -67,7 +81,57 @@ public class PluginRest {
 		return table;
 		
 	}
+	
+	@RequestMapping("/download/{file:.+}")
+	public void download(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("file") String fileName) throws IOException {
+		File file = new File(fileName);
+		if (file.exists()) {
+			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+			if (mimeType == null) {
+				mimeType = "application/octet-stream";
+			}
+			response.setContentType(mimeType);
+			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+			response.setContentLength((int) file.length());
+			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+			FileCopyUtils.copy(inputStream, response.getOutputStream());
 
+		}
+	}
+
+	@RequestMapping("/remove/{keyId:.+}")
+	public void remove(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("keyId") String keyId) throws IOException {
+			taskPluginMonitoring.delete(keyId);
+	}
+
+
+
+
+
+	
+	@PostMapping(path = "/executeTaskPost", consumes = "application/json", produces = "application/json")
+	public ReportingQueryResponse executeTaskPost(@RequestBody ReportingQuery reportingModel) {
+		String keyId = TaskPluginMonitoring.keyIdGenerator();
+		String pluginName = reportingModel.getPluginName();
+	    JobParametersBuilder paramsBuilder = new JobParametersBuilder();
+	    
+	    System.out.println("squery:"+reportingModel.getReportingSelectQuery());
+	    System.out.println("fquery:"+reportingModel.getReportingFromQuery());
+	    System.out.println("wquery:"+reportingModel.getReportingWhereQuery());
+	    paramsBuilder.addString("selectQuery",reportingModel.getReportingSelectQuery());
+	    paramsBuilder.addString("fromQuery",reportingModel.getReportingFromQuery());
+	    paramsBuilder.addString("whereQuery",reportingModel.getReportingWhereQuery());
+	    paramsBuilder.addLong("time",System.currentTimeMillis());
+        paramsBuilder.addString("keyId",keyId);	      
+        taskPluginMonitoring.put(new TaskMonitoring(keyId,pluginName));
+    	taskPluginServices.executeTask2(paramsBuilder, keyId, taskPluginMonitoring);
+    	ReportingQueryResponse response = new ReportingQueryResponse();
+    	response.setKeyId(keyId);
+    	response.setPluginName(pluginName);
+    	return response;
+	}
 	@GetMapping("/executeTask")
     public String executeTask() {
 			String keyId = TaskPluginMonitoring.keyIdGenerator();

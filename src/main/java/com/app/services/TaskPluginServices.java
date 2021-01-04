@@ -71,7 +71,7 @@ public class TaskPluginServices {
 		 String selectQuery =  paramsBuilder.toJobParameters().getString("selectQuery");
 		  String fromQuery =  paramsBuilder.toJobParameters().getString("fromQuery");
 		  String whereQuery =  paramsBuilder.toJobParameters().getString("whereQuery");
-		  List<String> headers = queryServices.getHeaders(getHeaderQuery(selectQuery, fromQuery, whereQuery));
+			  List<String> headers = queryServices.getHeaders(getHeaderQuery(selectQuery, fromQuery, whereQuery));
 		  Integer total = queryServices.getTotal(getTotalQuery(fromQuery, whereQuery));
 		  
 		  
@@ -98,7 +98,8 @@ public class TaskPluginServices {
 							 for(int i = 1 ; i <= columnCount ; i++){
 								 table.add(rsmd.getColumnName(i), rs.getString(rsmd.getColumnName(i)));
 							 }
-							table.setReg_spaj(rs.getString("reg_spaj"));
+							 
+							//table.setReg_spaj(rs.getString("reg_spaj"));
 							return table;
 						}
 					}, queryProvider);
@@ -220,7 +221,7 @@ public class TaskPluginServices {
 		StringBuffer q = new StringBuffer();
 		q.append("select count(*) as total");
 		q.append(" ");
-		q.append(fromQuery);
+		q.append("FROM "+fromQuery);
 		q.append(" ");
 		q.append(whereQuery);
 		return q.toString();
@@ -231,7 +232,7 @@ public class TaskPluginServices {
 		StringBuffer q = new StringBuffer();
 		q.append(selectQuery);
 		q.append(" ");
-		q.append(fromQuery);
+		q.append("FROM "+fromQuery);
 		q.append(" ");
 		q.append(whereQuery);
 		q.append(" ");

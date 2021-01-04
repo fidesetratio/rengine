@@ -64,7 +64,7 @@
   		
 	</div>
     <div th:if="${t.downloadFile != ''}" >
-  <img src="https://img.icons8.com/color/2x/ms-excel.png" width="40"  height="50"/>
+  		<a th:href="@{/plugin/download/{file}(file=${t.downloadFile})}"><img src="https://img.icons8.com/color/2x/ms-excel.png" width="40"  height="50"/></a>
 </div>
 
       </td>
@@ -72,7 +72,7 @@
     
       <td>
        <div th:if="${t.progress >= 100}" >
-  	<a href="">Remove</a>
+<a th:href="@{/plugin/remove/{keyId}(keyId=${t.keyId})}">Remove</a>
 </div>
       <div th:if="${t.progress < 100}" >
   Remove

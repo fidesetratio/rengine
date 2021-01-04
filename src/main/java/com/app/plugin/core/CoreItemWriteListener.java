@@ -29,6 +29,7 @@ public class CoreItemWriteListener implements ItemWriteListener<TaskTable>{
 	@Override
 	public void afterWrite(List<? extends TaskTable> items) {
 		// TODO Auto-generated method stub
+		System.out.println("Size:"+items.size());
 		  double runningWriteCount = this.runningWriteCount.addAndGet(items.size());
 		  double percentageComplete = (runningWriteCount / totalCount) * 100;
 		  taskPluginMonitoring.get(keyId).setProgress(percentageComplete);

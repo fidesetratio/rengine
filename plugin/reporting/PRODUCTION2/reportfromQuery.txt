@@ -1,0 +1,89 @@
+(
+    select
+         H.NAMA_DIST as channel,g.lca_nama|| '||'||F.LSRG_NAMA as cabang, 
+         (select xx.no_temp from eka.mst_spaj_temp xx where xx.reg_spaj = a.reg_Spaj) no_temporary, 
+         a.reg_Spaj as spaj,EKA.UTILS.PEMEGANG(a.reg_Spaj) as pemegang,EKA.UTILS.TERTANGGUNG(a.reg_Spaj)as tertanggung,
+         C.MSPR_PREMIUM as premi_pokok,
+         (select ber.mu_jlh_premi from eka.mst_ulink ber where ber.reg_Spaj=a.reg_spaj and ber.mu_ke in(1,2,3) and ber.lt_id=5 and ber.reg_Spaj=a.reg_Spaj and rownum=1)premi_topup,
+         (select tung.mu_jlh_premi from eka.mst_ulink tung where tung.reg_Spaj=a.reg_spaj and tung.mu_ke in(1,2,3) and tung.lt_id=2 and tung.reg_Spaj=a.reg_spaj and rownum=1)premi_topuptunggal,
+         (select sum(ap.ape_prod) from eka.mst_production ap where ap.reg_spaj=a.reg_spaj)ape,J.LSCB_PAY_MODE as cara_bayar,
+         D.LSDBS_NAME as nama_produk,to_char(I.TGL_INPUT_SPAJ_ADMIN,'dd/MM/yyyy') as tgl_input,
+         to_char(I.TGL_TRANSFER_UW_SPEEDY,'dd/MM/yyyy')as TGL_TRANSFER_UW_SPEEDY,to_char(I.TGL_BACK_TO_BAS,'dd/MM/yyyy')as TGL_BACK_TO_BAS,to_char(I.TGL_BACK_TO_ADMIN,'dd/MM/yyyy')as TGL_BACK_TO_ADMIN,
+         to_char(i.tgl_transfer_uw,'dd/MM/yyyy') as tgl_transfer_uwproses,to_char(I.TGL_FURTHER,'dd/MM/yyyy') as TGL_FURTHER,
+         (case when B.FLAG_SPEEDY =1 then to_char(i.tgl_akseptasi_polis,'dd/MM/yyyy')else '' end )tgl_aksep_speedy,
+         to_char(I.TGL_PRINT_POLIS,'dd/MM/yyyy')as tgl_print,
+         (case when (B.FLAG_SPEEDY =0 or B.FLAG_SPEEDY is null ) then to_char(i.tgl_akseptasi_polis,'dd/MM/yyyy')else (select to_char(pst.msps_date,'dd/MM/yyyy') from eka.mst_position_Spaj pst where pst.reg_Spaj=a.reg_Spaj and pst.msps_date=(select min(msps_date) from eka.mst_position_Spaj where reg_Spaj=pst.reg_Spaj and lssa_id=5 and lspd_id=2)) 
+              end )tgl_aksep_uwproses,
+         to_char(I.TGL_KIRIM_POLIS,'dd/MM/yyyy') as tgl_kirim_polis,to_char(I.tgl_ttp,'dd/MM/yyyy') as tgl_ttp,
+         to_char((select min(pst.msps_date) from eka.mst_position_spaj pst where pst.reg_spaj=a.reg_Spaj and pst.msps_desc like '%KIRIM ENROLLMENT%' ),'dd/MM/yyyy')tgl_enrollment_admedika,
+         to_char((select X.MSDP_INPUT_DATE from eka.mst_deposit_premium x where x.msdp_number=1 and x.reg_Spaj=a.reg_spaj),'dd/MM/yyyy')tgl_input_tp,
+         to_char((select min(yy.MSpa_INPUT_DATE) from eka.mst_payment yy where  yy.reg_Spaj=a.reg_spaj and (yy.msdp_number=1 or yy.msdp_number is null)),'dd/MM/yyyy')tgl_input_payment_pertama,
+         to_char(b.mste_tgl_spaj_doc,'dd/MM/yyyy')tgl_upload_scan,
+        to_char(i.tgl_transfer_uw_print,'dd/MM/yyyy')tgl_transfer_print_polis,
+         to_char(e.mspro_prod_date,'dd/MM/yyyy')tgl_produksi,
+         nvl(B.FLAG_SPEEDY,1) clean_unclean,
+         (case when d.lsbs_id in(115,116,117,118,119,120,121,122,127,128,129,138,139,140,141,152,153,154,159,160,162,190,191,199,200,202) then 1
+               when d.lsbs_id in(086,094,123,124,142,143,144,155,158,175,176,177,184,188,207)then 2 else 0 end )jenis,
+         d.lsbs_id,d.lsdbs_number,
+        (select 
+                  z.msps_desc from eka.mst_position_spaj z 
+             where 
+                  z.msps_date = (select max(x.msps_date) 
+                                  from eka.mst_position_spaj x 
+                                  where x.lspd_id = 27 and x.msps_desc like '%BACK TRANSFER KE BAS%' and x.reg_spaj = a.reg_spaj)
+                  and z.reg_spaj=a.reg_spaj)KETERANGAN_BACK_TO_BASS,
+        (select 
+                  z.msps_desc from eka.mst_position_spaj z 
+             where 
+                  z.msps_date = (select max(x.msps_date) 
+                                  from eka.mst_position_spaj x 
+                                  where x.msps_desc like '%BACK TRANSFER KE ADMIN%' and x.reg_spaj = a.reg_spaj)
+                  and z.reg_spaj=a.reg_spaj)KETERANGAN_BACK_TO_ADMIN,
+         (select 
+                  z.msps_desc from eka.mst_position_spaj z 
+             where 
+                  z.msps_date = (select max(x.msps_date) 
+                                  from eka.mst_position_spaj x 
+                                  where x.msps_desc like '%FR%' and x.lssa_id =3 and x.reg_spaj = a.reg_spaj)
+                  and z.reg_spaj=a.reg_spaj)KETERANGAN_FR,
+          (case when exists (select 1 from eka.mst_spaj_temp where reg_spaj = a.reg_spaj and lca_id not in ('40')) then 'ESPAJ' else 'ELIONS' end) flag,
+        (select DECODE (flag_app, 0, 'ESPAJ', 1, 'AUTOSALES')  FROM eka.mst_spaj_temp where reg_spaj = a.reg_spaj and lca_id not in ('40'))flag_app,
+          EKA.UTILS.NAMA_AGEN(a.mspo_ao) nama_bc, 
+          k.lrb_leader_nama nama_am,    
+          k.wilayah, k.cabang_bank,
+          a.pega_case_id flag_pega
+   from
+        eka.mst_policy a,
+        eka.mst_insured b,
+        eka.mst_product_insured c,
+        eka.lst_det_bisnis d,
+        eka.mst_production e,
+        eka.lst_region f,
+        eka.lst_cabang g,
+        eka.lst_jalur_dist h,
+        eka.mst_trans_history i,
+        EKA.LST_PAY_MODE j,
+        dms.mst_depository_production@dwhdb k
+   where
+        a.reg_Spaj=b.reg_Spaj
+        and a.LSCB_ID=J.LSCB_ID
+        and a.reg_Spaj=c.reg_Spaj
+        and c.lsbs_id=d.lsbs_id
+        and c.lsdbs_number=d.lsdbs_number
+        and a.reg_Spaj=e.reg_Spaj
+        and a.lca_id=g.lca_id
+        and a.lca_id=f.lca_id
+        and a.lwk_id=f.lwk_id
+        and a.lsrg_id=f.lsrg_id
+        and a.lstb_id=1
+        and c.lsbs_id<300
+        and a.lspd_id<>95
+        and g.jalurdis=h.id_dist
+        and a.reg_spaj = i.reg_spaj(+)
+        and i.jenis=23
+        and E.MSPRO_PROD_KE=1
+        and E.MSPRO_PROD_DATE between to_date('${tglawal}','dd/mm/yyyy') and to_date('${tglakhir}','dd/mm/yyyy')+1
+        and A.REG_SPAJ = k.reg_spaj
+        and k.prod_ke = 1
+        order by i.tgl_input_Spaj_admin asc
+        )nb

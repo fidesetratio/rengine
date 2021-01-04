@@ -112,21 +112,24 @@ public class ExcellWriter implements ItemWriter<TaskTable>,StepExecutionListener
 			 	for(int it=1;it<headersExcel.size();it++) {
 			 		Cell c = r.createCell(j);
 			 		Object o = i.get(headersExcel.get(it));
-			 		if(o != null) {
-			 		if(o instanceof String) {
-			 			c.setCellValue((String)o);
-			 		}else if(o instanceof Integer) {
-				 		c.setCellValue((Integer)o);
-			 		}else if(o instanceof Date) {
-				 		c.setCellValue((Date)o);
-			 		}else if(o instanceof Double)
-			 		{
-			 			c.setCellValue((Double)o);
-			 		}else {
-			 			c.setCellValue(o.toString());
+			 		if(o == null) {
+			 			o = new String(" ");
 			 		}
-			 		
-			 		j++;
+			 		if(o != null) {
+				 		if(o instanceof String) {
+				 			c.setCellValue((String)o);
+				 		}else if(o instanceof Integer) {
+					 		c.setCellValue((Integer)o);
+				 		}else if(o instanceof Date) {
+					 		c.setCellValue((Date)o);
+				 		}else if(o instanceof Double)
+				 		{
+				 			c.setCellValue((Double)o);
+				 		}else {
+				 			c.setCellValue(o.toString());
+				 		}
+				 		
+				 		j++;
 			 		};
 			 	}
 			 

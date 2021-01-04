@@ -7,6 +7,8 @@ public class TaskMonitoring {
 	private String keyId;
 
 	private Date dateTime;
+	private String pluginName;
+	
 	
 	public String getDownloadFile() {
 		return downloadFile;
@@ -30,6 +32,8 @@ public class TaskMonitoring {
 		this.dateTime = new Date();
 		this.progress = 0d;
 		this.downloadFile = "";
+		this.pluginName = "";
+		
 
 	}
 	 
@@ -63,8 +67,22 @@ public class TaskMonitoring {
 		this.dateTime = new Date();
 		this.progress = 0d;
 		this.downloadFile = "";
+		this.pluginName = "";
+		
 		
 	}
+	  
+	  public TaskMonitoring(String keyId,String pluginName) {
+			super();
+			this.keyId = keyId;
+			this.dateTime = new Date();
+			this.progress = 0d;
+			this.downloadFile = "";
+			this.pluginName = pluginName;
+			
+			
+		}
+
 
 	public String getKeyId() {
 			return keyId;
@@ -72,6 +90,14 @@ public class TaskMonitoring {
 
 		public void setKeyId(String keyId) {
 			this.keyId = keyId;
+		}
+
+		public String getPluginName() {
+			return pluginName;
+		}
+
+		public void setPluginName(String pluginName) {
+			this.pluginName = pluginName;
 		};
   
 }
