@@ -1,0 +1,4 @@
+eka.mst_policy a, eka.mst_product_insured b,eka.lst_det_bisnis c,
+		    		eka.lst_cabang e,
+		    		eka.lst_jalur_dist h,
+		    		dms.mst_depository_production@dwhdb k

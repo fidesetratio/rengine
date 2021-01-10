@@ -1,9 +1,11 @@
 package com.app.controller;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,11 +53,31 @@ public class MainController {
 					query = reporting.loadQueryFromTxt();
 				};
 				reporting.loadReportQueryFromTxt();
+				
+				String multiq = StringUtils.join(reporting.getMultiq(), ";");
+				String multir = StringUtils.join(reporting.getMultir(), ";");
+				
 				String reportQuery = reporting.getReportselectQuery()+" from "+ reporting.getReportfromQuery() + " "+ reporting.getReportwhereQuery();
 				model.addAttribute("query", query);
 				model.addAttribute("reportQuery",reportQuery);
 				model.addAttribute("plugin", p);
+				model.addAttribute("multiq", multiq);
+				model.addAttribute("multir", multir);
+				model.addAttribute("mulitQlist",reporting.getMultiq());
+				model.addAttribute("mulitRlist",reporting.getMultir());
+				
+				
 		   		model.addAttribute("reporting",reporting);
+		   		int manyForm = ((Reporting) p.getObject()).getForms().size();
+		   		
+		   		BigDecimal sisa =new BigDecimal(manyForm/3);
+		   		sisa = sisa.setScale(BigDecimal.ROUND_CEILING);
+		   		System.out.println(sisa.setScale(BigDecimal.ROUND_CEILING));
+		   		model.addAttribute("manyformQ",manyForm);
+		   		model.addAttribute("manyRowQ",sisa.toBigInteger().intValue());
+		   		
+		    	
+		   		
 		    	model.addAttribute("forms",((Reporting) p.getObject()).getForms());
 		    	model.addAttribute("reportforms",((Reporting) p.getObject()).getReportingform());
 

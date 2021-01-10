@@ -1,0 +1,31 @@
+{
+	"pluginName":"Multi Query",
+	"version":"1.0",
+	"className":"com.app.plugin.core.model.Reporting",
+	"description": "Test  Untuk Multi",
+	"object":{
+	           "query":"query.txt",
+	           "forms":[
+	       			{"name":"start","label":"Start","value":"1","type":"text"},
+	       		    {"name":"end","label":"End","value":"1","type":"text"},
+	       		    {"name":"multi","label":"In (Multi)","value":"","type":"text"},
+	       		      {"name":"multi2","label":"In (Multi2)","value":"","type":"text"},
+	       		       {"name":"petro","label":"In (Petro)","value":"","type":"text"}
+	
+	       			],
+	       	 "reportingquery":"report",
+	       	 "reportingform":[
+	       			{"name":"tglawal","label":"Tanggal Awal","value":"01 Jan 2017","type":"text"},
+	       		    {"name":"tglakhir","label":"Tanggal Akhir","value":"13 Dec 2020","type":"text"},
+	       		    {"name":"multi","label":"In (Multi)","value":"","type":"text"}
+	       		
+	       			],
+	       	 "multiq":["multi","multi2","petro"],
+	       	 "multir":["multi"],
+	       	 "allowedQuickSearch":true,
+	       	 "allowedReporting":true
+	       	 		
+	          }
+	         
+	       		
+}

@@ -1,0 +1,26 @@
+{
+	"pluginName":"Status Polis",
+	"version":"1.0",
+	"className":"com.app.plugin.core.model.Reporting",
+	"description": "Status Polis",
+	"object":{
+	           "query":"query.txt",
+	           "forms":[
+	       			{"name":"regspaj","label":"In (Reg Spaj)","value":"","type":"text"}
+	       			],
+	       	 "reportingquery":"report",
+	       	 "reportingform":[
+	       			{"name":"tglawal","label":"Tanggal Awal","value":"01 Jan 2017","type":"text"},
+	       		    {"name":"tglakhir","label":"Tanggal Akhir","value":"13 Dec 2020","type":"text"},
+	       		    {"name":"multi","label":"In (Multi)","value":"","type":"text"}
+	       		
+	       			],
+	       	 "multiq":["regspaj"],
+	       	 "multir":["multi"],
+	       	 "allowedQuickSearch":true,
+	       	 "allowedReporting":false
+	       	 		
+	          }
+	         
+	       		
+}

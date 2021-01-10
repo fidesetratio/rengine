@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -23,12 +24,40 @@ public class Reporting {
 	private String reportwhereQuery;
 	
 	private List<Forms> reportingform;
+	private List<String> multiq;
+	private List<String> multir;
+	private Integer formqCounter;
+	
+	
+	
 	
 	private Boolean allowedQuickSearch;
 	private Boolean allowedReporting;
 	
 	
+	public Reporting() {
+		this.multiq =  new ArrayList<String>();
+		this.multir = new ArrayList<String>();
+		this.formqCounter = 0;
+	}
 
+	public void addQ(Integer counter) {
+		formqCounter = formqCounter+counter;
+	}
+	
+	public void resetQ() {
+		formqCounter = 0;
+		
+		
+	}
+	
+	public Boolean allowedDrawQ() {
+		return this.formqCounter < this.forms.size();
+	}
+	public Integer currentCounterQ() {
+		return formqCounter;
+	}
+	
 	public Plugin getPlugin() {
 		return plugin;
 	}
@@ -200,4 +229,21 @@ public class Reporting {
 		this.allowedReporting = allowedReporting;
 	}
 
+	public List<String> getMultiq() {
+		return multiq;
+	}
+
+	public void setMultiq(List<String> multiq) {
+		this.multiq = multiq;
+	}
+
+	public List<String> getMultir() {
+		return multir;
+	}
+
+	public void setMultir(List<String> multir) {
+		this.multir = multir;
+	}
+
+	
 }

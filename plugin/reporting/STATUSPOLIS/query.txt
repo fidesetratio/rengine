@@ -1,0 +1,10 @@
+select a.reg_spaj,a.mspo_policy_no as no_polis,b.mcl_first as nama_pemegang,D.LSDBS_NAME as nama_product, e.lssp_status as status_polis from eka.mst_policy a, eka.mst_client_new b,
+eka.mst_product_insured c, eka.lst_det_bisnis d, eka.lst_policy_status e where 
+a.mspo_policy_holder = b.mcl_id
+and
+a.reg_spaj = c.reg_spaj and c.lsbs_id < 300 
+and e.lssp_id = a.lssp_id
+and
+(d.lsbs_id = c.lsbs_id and c.lsdbs_number = d.lsdbs_number)
+and
+a.reg_spaj in (%%{regspaj}%%)

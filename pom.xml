@@ -106,6 +106,35 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+             <plugin>
+   <groupId>com.akathist.maven.plugins.launch4j</groupId>
+   <artifactId>launch4j-maven-plugin</artifactId>
+   <version>1.7.21</version>
+   <executions>
+     <execution>
+       <id>l4j-pampass</id>
+       <phase>package</phase>
+       <goals>
+         <goal>launch4j</goal>
+       </goals>
+       <configuration>
+         <headerType>console</headerType>
+         <jar>${project.build.directory}/${project.build.finalName}.${project.packaging}</jar>
+         <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+         <downloadUrl>http://java.com/download</downloadUrl>
+         <classPath>
+           <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
+         </classPath>
+         <jre>
+	           <path>C:\Program Files\Java\jre1.8.0_261\</path>
+           <bundledJre64Bit>true</bundledJre64Bit>
+           <runtimeBits>64</runtimeBits>
+         </jre>
+       </configuration>
+     </execution>
+   </executions>
+ </plugin>
+ 
         </plugins>
     </build>
 </project>

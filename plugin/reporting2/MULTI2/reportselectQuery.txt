@@ -1,0 +1,11 @@
+select rownum as number1,a.mspo_policy_no as no_polis,a.reg_spaj, 
+		    			EKA.UTILS.PEMEGANG (a.reg_Spaj) AS pemegang, 
+		    		   EKA.UTILS.TERTANGGUNG (a.reg_Spaj) AS tertanggung, 
+		    		          EKA.UTILS.TGL_LAHIR_TERTANGGUNG(a.reg_spaj) as tgl_lahir_tertanggung,
+		    		          EKA.UTILS.STATUS_POLIS(a.lssp_id) as status_polis,
+		    		          b.mspr_tsi as up,
+		    		          a.mspo_beg_date as beg_date,
+		    		          c.lsdbs_name as nama_produk,
+		    		          H.NAMA_DIST AS channel,
+		    		          A.mspo_input_date as input_date,
+		    		           k.wilayah, k.cabang_bank 

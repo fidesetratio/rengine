@@ -1,0 +1,1 @@
+select * from eka.mst_policy where reg_spaj in (%%{regspaj}%%) 

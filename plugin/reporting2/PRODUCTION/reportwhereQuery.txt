@@ -1,0 +1,11 @@
+where a.reg_spaj = b.reg_spaj and b.lsbs_id < 300 
+		    		 and k.reg_spaj = a.reg_spaj 
+		    		 and k.prod_ke = 1 
+		    		 AND a.lca_id = e.lca_id 
+		    		 AND e.jalurdis = h.id_dist 
+		    		and trunc(A.mspo_input_date) between '${tglawal}' and '${tglakhir}' 
+		    		and b.lsbs_id in ('212','223')
+		    		and a.lssp_id = 1 
+		    		and b.lsbs_id = c.lsbs_id and b.lsdbs_number = c.lsdbs_number
+		    		 AND a.lspd_id <> 95 
+		    		
